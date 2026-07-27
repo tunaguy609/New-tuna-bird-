@@ -23,6 +23,8 @@ wall_thickness = 1.6;
 
 ring_width = 3.0;
 ring_height = 1.2;
+taper_radius_reduction = 2.0;
+cutout_overlap = 1.0;
 water_port = 3.5;
 nose_section_count = 14;
 // Height of each cylindrical slice used to hull the nose profile.
@@ -43,7 +45,7 @@ overall_length = nose_length + rear_length;
 section_spacing = nose_length / (safe_nose_sections - 1);
 
 if (nose_section_count < 2) {
-    echo("nose_section_count must be at least 2; clamping to 2.");
+    echo("nose_section_count must be at least 2; using safe_nose_sections = 2.");
 }
 
 function section_x_offset(section_index) = section_index * section_spacing;
@@ -127,7 +129,7 @@ module rear_body() {
         ])
             rotate([0, 90, 0])
                 cylinder(
-                    h = pocket_depth + 1,
+                    h = pocket_depth + cutout_overlap,
                     r = pocket_ID / 2
                 );
 
@@ -140,7 +142,7 @@ module rear_body() {
             rotate([0, 90, 0])
                 cylinder(
                     h = entry_taper,
-                    r1 = (pocket_ID / 2) - 2,
+                    r1 = (pocket_ID / 2) - taper_radius_reduction,
                     r2 = pocket_ID / 2
                 );
     }
