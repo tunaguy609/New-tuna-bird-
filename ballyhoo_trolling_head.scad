@@ -18,6 +18,8 @@ retaining_ring_width = 3.0;
 ring_height = 1.2;
 water_port = 3.5;
 nose_sections = 14;
+section_thickness = 0.6;
+nose_curve_exponent = 0.65;
 
 module rounded_nose() {
     difference() {
@@ -33,11 +35,11 @@ module rounded_nose() {
                     ])
                         rotate([0, 90, 0])
                             cylinder(
-                                h = 0.6,
+                                h = section_thickness,
                                 r =
                                     (tip_diameter / 2) +
                                     ((max_diameter - tip_diameter) / 2) *
-                                    pow(i / (nose_sections - 1), 0.65)
+                                    pow(i / (nose_sections - 1), nose_curve_exponent)
                             );
 
                     translate([
@@ -47,11 +49,11 @@ module rounded_nose() {
                     ])
                         rotate([0, 90, 0])
                             cylinder(
-                                h = 0.6,
+                                h = section_thickness,
                                 r =
                                     (tip_diameter / 2) +
                                     ((max_diameter - tip_diameter) / 2) *
-                                    pow((i + 1) / (nose_sections - 1), 0.65)
+                                    pow((i + 1) / (nose_sections - 1), nose_curve_exponent)
                             );
                 }
             }
