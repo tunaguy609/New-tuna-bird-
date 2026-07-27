@@ -1,14 +1,16 @@
-$fn = 140;
-
 //====================
 // USER PARAMETERS
 //====================
+
+render_resolution = 140;
 
 nose_length = 37.5;
 rear_length = 22.2;
 max_diameter = 19.05;
 tip_diameter = 4.8;
 line_hole = 2.0;
+
+$fn = render_resolution;
 
 //====================
 // SKIRT POCKET
