@@ -16,7 +16,7 @@ pocket_depth = 16.5;
 retaining_ring_width = 3.0;
 ring_height = 1.2;
 water_port = 3.5;
-nose_sections = 14;
+nose_section_count = 14;
 // Height of each cylindrical slice used to hull the nose profile.
 hull_slice_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper.
@@ -28,7 +28,8 @@ bore_extension = 1;
 // DERIVED VALUES
 //====================
 
-safe_nose_sections = max(nose_sections, 2);
+// At least 2 sections are required to create one hull segment from i to i + 1.
+safe_nose_sections = max(nose_section_count, 2);
 // Computed from the nose and rear body lengths.
 overall_length = nose_length + rear_length;
 section_spacing = nose_length / (safe_nose_sections - 1);
@@ -58,7 +59,7 @@ module rounded_nose() {
     difference() {
         union() {
             // Blend multiple cross-sections to form
-            // a smooth trolling-head profile.
+            // a smooth trolling head profile.
             // Loop pairs adjacent sections (i with i + 1) to build the profile.
             for (i = [0:safe_nose_sections - 2]) {
                 hull() {
