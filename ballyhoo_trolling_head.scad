@@ -136,26 +136,17 @@ module rear_body() {
     }
 }
 
-//====================
-// MAIN BODY
-//====================
-
-module head_body() {
-    difference() {
-        union() {
-            // Rounded Nose
-            rounded_nose();
-            rear_body();
-        }
-
-        // Center bore
-        translate([-bore_extension, 0, 0])
-            rotate([0, 90, 0])
-                cylinder(
-                    h = overall_length + (bore_extension * 2),
-                    r = line_hole / 2
-                );
+difference() {
+    union() {
+        rounded_nose();
+        rear_body();
     }
-}
 
-head_body();
+    // Center bore
+    translate([-bore_extension, 0, 0])
+        rotate([0, 90, 0])
+            cylinder(
+                h = overall_length + (bore_extension * 2),
+                r = line_hole / 2
+            );
+}
