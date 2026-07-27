@@ -90,7 +90,7 @@ module rounded_nose() {
 module head_body() {
     difference() {
         union() {
-            // Nose
+            // Rounded Nose
             rounded_nose();
 
             // Rear body
