@@ -180,7 +180,7 @@ module water_ports() {
     }
 }
 
-module head_body() {
+module assembly() {
     difference() {
         union() {
             rounded_nose();
@@ -203,4 +203,8 @@ module head_body() {
     }
 }
 
-head_body();
+module head_body() {
+    assembly();
+}
+
+assembly();
