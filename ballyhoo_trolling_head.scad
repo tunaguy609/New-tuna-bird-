@@ -17,7 +17,6 @@ line_hole = 2.0;
 pocket_depth = 16.5;
 pocket_ID = 15.8;
 entry_taper = 3.0;
-wall_thickness = 1.6;
 
 ring_width = 3.0;
 ring_height = 1.2;
@@ -201,10 +200,6 @@ module assembly() {
         // Water ports
         water_ports();
     }
-}
-
-module head_body() {
-    assembly();
 }
 
 assembly();
