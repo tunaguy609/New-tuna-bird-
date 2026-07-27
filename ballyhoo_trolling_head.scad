@@ -21,6 +21,7 @@ nose_sections = 14;
 section_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper.
 nose_curve_exponent = 0.65;
+bore_extension = 1;
 
 //====================
 // DERIVED VALUES
@@ -29,6 +30,8 @@ nose_curve_exponent = 0.65;
 // Computed from the nose and rear body lengths.
 overall_length = nose_length + rear_length;
 section_spacing = nose_length / (nose_sections - 1);
+
+function section_x_offset(section_index) = section_index * section_spacing;
 
 // Returns the nose radius at a section index along the rounded profile.
 function nose_radius(section_index) =
@@ -45,7 +48,7 @@ module rounded_nose() {
             for (i = [0:nose_sections - 2]) {
                 hull() {
                     translate([
-                        i * section_spacing,
+                        section_x_offset(i),
                         0,
                         0
                     ])
@@ -56,7 +59,7 @@ module rounded_nose() {
                             );
 
                     translate([
-                        (i + 1) * section_spacing,
+                        section_x_offset(i + 1),
                         0,
                         0
                     ])
@@ -70,10 +73,10 @@ module rounded_nose() {
         }
 
         // Center line passage
-        translate([-1, 0, 0])
+        translate([-bore_extension, 0, 0])
             rotate([0, 90, 0])
                 cylinder(
-                    h = nose_length + 2,
+                    h = nose_length + (bore_extension * 2),
                     r = line_hole / 2
                 );
     }
@@ -107,10 +110,10 @@ module head_body() {
         }
 
         // Center bore
-        translate([-1, 0, 0])
+        translate([-bore_extension, 0, 0])
             rotate([0, 90, 0])
                 cylinder(
-                    h = overall_length + 2,
+                    h = overall_length + (bore_extension * 2),
                     r = line_hole / 2
                 );
     }
