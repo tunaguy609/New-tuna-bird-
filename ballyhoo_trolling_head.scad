@@ -11,9 +11,17 @@ tip_diameter = 4.8;
 line_hole = 2.0;
 eye_diameter = 6.5;
 eye_depth = 1.5;
-pocket_diameter = 15.8;
+
+//====================
+// SKIRT POCKET
+//====================
+
 pocket_depth = 16.5;
-retaining_ring_width = 3.0;
+pocket_ID = 15.8;
+entry_taper = 3.0;
+wall_thickness = 1.6;
+
+ring_width = 3.0;
 ring_height = 1.2;
 water_port = 3.5;
 nose_section_count = 14;
@@ -33,6 +41,10 @@ safe_nose_sections = max(nose_section_count, 2);
 // Computed from the nose and rear body lengths.
 overall_length = nose_length + rear_length;
 section_spacing = nose_length / (safe_nose_sections - 1);
+rear_body_radius = max(max_diameter / 2, pocket_ID / 2 + wall_thickness);
+rear_entry_radius = max(pocket_ID / 2, rear_body_radius - wall_thickness);
+pocket_taper_depth = min(entry_taper, pocket_depth);
+pocket_straight_depth = max(pocket_depth - pocket_taper_depth, 0);
 
 if (nose_section_count < 2) {
     echo("nose_section_count must be at least 2; clamping to 2.");
@@ -71,6 +83,25 @@ module rounded_nose() {
                     nose_section(i + 1);
                 }
             }
+
+            module skirt_pocket_cutout() {
+                if (pocket_straight_depth > 0) {
+                    translate([overall_length - pocket_depth, 0, 0])
+                        rotate([0, 90, 0])
+                            cylinder(
+                                h = pocket_straight_depth,
+                                r = pocket_ID / 2
+                            );
+                }
+
+                translate([overall_length - pocket_taper_depth, 0, 0])
+                    rotate([0, 90, 0])
+                        cylinder(
+                            h = pocket_taper_depth,
+                            r1 = pocket_ID / 2,
+                            r2 = rear_entry_radius
+                        );
+            }
         }
 
         // Center line passage
@@ -98,15 +129,15 @@ module head_body() {
                 rotate([0, 90, 0])
                     cylinder(
                         h = rear_length,
-                        r = max_diameter / 2
+                        r = rear_body_radius
                     );
 
             // Retaining ring
-            translate([overall_length - retaining_ring_width, 0, 0])
+            translate([overall_length - ring_width, 0, 0])
                 rotate([0, 90, 0])
                     cylinder(
-                        h = retaining_ring_width,
-                        r = max_diameter / 2 + ring_height
+                        h = ring_width,
+                        r = rear_body_radius + ring_height
                     );
         }
 
@@ -117,6 +148,8 @@ module head_body() {
                     h = overall_length + (bore_extension * 2),
                     r = line_hole / 2
                 );
+
+        skirt_pocket_cutout();
     }
 }
 
