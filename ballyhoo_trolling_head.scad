@@ -18,7 +18,7 @@ ring_height = 1.2;
 water_port = 3.5;
 nose_sections = 14;
 // Height of each cylindrical slice used to hull the nose profile.
-section_height = 0.6;
+hull_slice_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper.
 nose_curve_exponent = 0.65;
 // Extra length to extend the center bore beyond the model ends (mm).
@@ -28,9 +28,10 @@ bore_extension = 1;
 // DERIVED VALUES
 //====================
 
+safe_nose_sections = max(nose_sections, 2);
 // Computed from the nose and rear body lengths.
 overall_length = nose_length + rear_length;
-section_spacing = nose_length / (nose_sections - 1);
+section_spacing = nose_length / (safe_nose_sections - 1);
 
 function section_x_offset(section_index) = section_index * section_spacing;
 
@@ -38,7 +39,7 @@ function section_x_offset(section_index) = section_index * section_spacing;
 function nose_radius(section_index) =
     (tip_diameter / 2) +
     ((max_diameter - tip_diameter) / 2) *
-    pow(section_index / (nose_sections - 1), nose_curve_exponent);
+    pow(section_index / (safe_nose_sections - 1), nose_curve_exponent);
 
 module nose_section(section_index) {
     translate([
@@ -48,7 +49,7 @@ module nose_section(section_index) {
     ])
         rotate([0, 90, 0])
             cylinder(
-                h = section_height,
+                h = hull_slice_height,
                 r = nose_radius(section_index)
             );
 }
@@ -59,7 +60,7 @@ module rounded_nose() {
             // Blend multiple cross-sections to form
             // a smooth trolling-head profile.
             // Loop pairs adjacent sections (i with i + 1) to build the profile.
-            for (i = [0:nose_sections - 2]) {
+            for (i = [0:safe_nose_sections - 2]) {
                 hull() {
                     nose_section(i);
                     nose_section(i + 1);
