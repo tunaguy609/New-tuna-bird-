@@ -83,25 +83,6 @@ module rounded_nose() {
                     nose_section(i + 1);
                 }
             }
-
-            module skirt_pocket_cutout() {
-                if (pocket_straight_depth > 0) {
-                    translate([overall_length - pocket_depth, 0, 0])
-                        rotate([0, 90, 0])
-                            cylinder(
-                                h = pocket_straight_depth,
-                                r = pocket_ID / 2
-                            );
-                }
-
-                translate([overall_length - pocket_taper_depth, 0, 0])
-                    rotate([0, 90, 0])
-                        cylinder(
-                            h = pocket_taper_depth,
-                            r1 = pocket_ID / 2,
-                            r2 = rear_entry_radius
-                        );
-            }
         }
 
         // Center line passage
@@ -112,6 +93,25 @@ module rounded_nose() {
                     r = line_hole / 2
                 );
     }
+}
+
+module skirt_pocket_cutout() {
+    if (pocket_straight_depth > 0) {
+        translate([overall_length - pocket_depth, 0, 0])
+            rotate([0, 90, 0])
+                cylinder(
+                    h = pocket_straight_depth,
+                    r = pocket_ID / 2
+                );
+    }
+
+    translate([overall_length - pocket_taper_depth, 0, 0])
+        rotate([0, 90, 0])
+            cylinder(
+                h = pocket_taper_depth,
+                r1 = pocket_ID / 2,
+                r2 = rear_entry_radius
+            );
 }
 
 //====================
