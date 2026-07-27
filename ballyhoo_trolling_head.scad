@@ -6,6 +6,7 @@ $fn = 140;
 
 nose_length = 37.5;
 rear_length = 22.2;
+// Derived from the combined nose and rear body lengths.
 overall_length = nose_length + rear_length;
 
 max_diameter = 19.05;
@@ -19,14 +20,22 @@ retaining_ring_width = 3.0;
 ring_height = 1.2;
 water_port = 3.5;
 nose_sections = 14;
+// Height of each cylindrical slice used to hull the nose profile.
 section_height = 0.6;
+// Lower values soften the curve; higher values steepen the taper.
 nose_curve_exponent = 0.65;
+
+function nose_radius(section_index) =
+    (tip_diameter / 2) +
+    ((max_diameter - tip_diameter) / 2) *
+    pow(section_index / (nose_sections - 1), nose_curve_exponent);
 
 module rounded_nose() {
     difference() {
         union() {
             // Blend multiple cross-sections to form
             // a smooth trolling-head profile.
+            // Stop at nose_sections - 2 so each hull pairs section i with i + 1.
             for (i = [0:nose_sections - 2]) {
                 hull() {
                     translate([
@@ -37,10 +46,7 @@ module rounded_nose() {
                         rotate([0, 90, 0])
                             cylinder(
                                 h = section_height,
-                                r =
-                                    (tip_diameter / 2) +
-                                    ((max_diameter - tip_diameter) / 2) *
-                                    pow(i / (nose_sections - 1), nose_curve_exponent)
+                                r = nose_radius(i)
                             );
 
                     translate([
@@ -51,10 +57,7 @@ module rounded_nose() {
                         rotate([0, 90, 0])
                             cylinder(
                                 h = section_height,
-                                r =
-                                    (tip_diameter / 2) +
-                                    ((max_diameter - tip_diameter) / 2) *
-                                    pow((i + 1) / (nose_sections - 1), nose_curve_exponent)
+                                r = nose_radius(i + 1)
                             );
                 }
             }
