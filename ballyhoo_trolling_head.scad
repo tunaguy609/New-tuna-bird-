@@ -24,6 +24,7 @@ nose_sections = 14;
 section_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper.
 nose_curve_exponent = 0.65;
+section_spacing = nose_length / (nose_sections - 1);
 
 function nose_radius(section_index) =
     (tip_diameter / 2) +
@@ -35,11 +36,11 @@ module rounded_nose() {
         union() {
             // Blend multiple cross-sections to form
             // a smooth trolling-head profile.
-            // Stop at nose_sections - 2 so each hull pairs section i with i + 1.
+            // The loop runs from 0 to nose_sections - 2 inclusive so each hull pairs section i with i + 1.
             for (i = [0:nose_sections - 2]) {
                 hull() {
                     translate([
-                        i * (nose_length / (nose_sections - 1)),
+                        i * section_spacing,
                         0,
                         0
                     ])
@@ -50,7 +51,7 @@ module rounded_nose() {
                             );
 
                     translate([
-                        (i + 1) * (nose_length / (nose_sections - 1)),
+                        (i + 1) * section_spacing,
                         0,
                         0
                     ])
