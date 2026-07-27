@@ -41,11 +41,6 @@ safe_nose_sections = max(nose_section_count, 2);
 // Computed from the nose and rear body lengths.
 overall_length = nose_length + rear_length;
 section_spacing = nose_length / (safe_nose_sections - 1);
-rear_body_radius = max(max_diameter / 2, pocket_ID / 2 + wall_thickness);
-// Keep the taper exit at least as wide as the pocket while preserving the minimum wall thickness.
-rear_entry_radius = max(pocket_ID / 2, rear_body_radius - wall_thickness);
-pocket_taper_depth = min(entry_taper, pocket_depth);
-pocket_straight_depth = max(pocket_depth - pocket_taper_depth, 0);
 
 if (nose_section_count < 2) {
     echo("nose_section_count must be at least 2; clamping to 2.");
@@ -96,24 +91,59 @@ module rounded_nose() {
     }
 }
 
-module skirt_pocket_cutout() {
-    if (pocket_straight_depth > 0) {
-        // Start the pocket cavity this far forward from the rear face, then taper the last section at the opening.
-        translate([overall_length - pocket_depth, 0, 0])
+/////////////////////////////////////////////////////
+// Rear Body with Skirt Pocket
+/////////////////////////////////////////////////////
+
+module rear_body() {
+    difference() {
+        union() {
+            // Rear outside body
+            translate([nose_length, 0, 0])
+                rotate([0, 90, 0])
+                    cylinder(
+                        h = rear_length,
+                        r = max_diameter / 2
+                    );
+
+            // Retaining ring
+            translate([
+                overall_length - ring_width,
+                0,
+                0
+            ])
+                rotate([0, 90, 0])
+                    cylinder(
+                        h = ring_width,
+                        r = max_diameter / 2 + ring_height
+                    );
+        }
+
+        // Skirt pocket
+        translate([
+            overall_length - pocket_depth,
+            0,
+            0
+        ])
             rotate([0, 90, 0])
                 cylinder(
-                    h = pocket_straight_depth,
+                    h = pocket_depth + 1,
                     r = pocket_ID / 2
                 );
-    }
 
-    translate([overall_length - pocket_taper_depth, 0, 0])
-        rotate([0, 90, 0])
-            cylinder(
-                h = pocket_taper_depth,
-                r1 = pocket_ID / 2,
-                r2 = rear_entry_radius
-            );
+        // Lead-in taper
+        translate([
+            overall_length - pocket_depth - entry_taper,
+            0,
+            0
+        ])
+            rotate([0, 90, 0])
+                cylinder(
+                    h = entry_taper,
+                    r1 = (pocket_ID / 2) - 2,
+                    r2 = pocket_ID / 2
+                );
+    }
 }
 
 //====================
@@ -125,22 +155,7 @@ module head_body() {
         union() {
             // Rounded Nose
             rounded_nose();
-
-            // Rear body
-            translate([nose_length, 0, 0])
-                rotate([0, 90, 0])
-                    cylinder(
-                        h = rear_length,
-                        r = rear_body_radius
-                    );
-
-            // Retaining ring
-            translate([overall_length - ring_width, 0, 0])
-                rotate([0, 90, 0])
-                    cylinder(
-                        h = ring_width,
-                        r = rear_body_radius + ring_height
-                    );
+            rear_body();
         }
 
         // Center bore
@@ -150,8 +165,6 @@ module head_body() {
                     h = overall_length + (bore_extension * 2),
                     r = line_hole / 2
                 );
-
-        skirt_pocket_cutout();
     }
 }
 
