@@ -42,6 +42,7 @@ safe_nose_sections = max(nose_section_count, 2);
 overall_length = nose_length + rear_length;
 section_spacing = nose_length / (safe_nose_sections - 1);
 rear_body_radius = max(max_diameter / 2, pocket_ID / 2 + wall_thickness);
+// Keep the taper exit at least as wide as the pocket while preserving the minimum wall thickness.
 rear_entry_radius = max(pocket_ID / 2, rear_body_radius - wall_thickness);
 pocket_taper_depth = min(entry_taper, pocket_depth);
 pocket_straight_depth = max(pocket_depth - pocket_taper_depth, 0);
@@ -97,6 +98,7 @@ module rounded_nose() {
 
 module skirt_pocket_cutout() {
     if (pocket_straight_depth > 0) {
+        // Start the pocket cavity this far forward from the rear face, then taper the last section at the opening.
         translate([overall_length - pocket_depth, 0, 0])
             rotate([0, 90, 0])
                 cylinder(
