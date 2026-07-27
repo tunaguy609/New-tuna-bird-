@@ -2,6 +2,7 @@
 // USER PARAMETERS
 //====================
 
+// Curved-surface facet count; higher values render smoother STL output at the cost of speed.
 render_resolution = 140;
 
 nose_length = 37.5;
@@ -33,7 +34,7 @@ nose_curve_exponent = 0.65;
 bore_extension = 1;
 
 /////////////////////////////////////////////////////
-// PART 4 PARAMETERS
+// EYE AND WATER PORT PARAMETERS
 /////////////////////////////////////////////////////
 
 eye_diameter = 6.5;
@@ -51,6 +52,10 @@ water_port_height = 25;
 //====================
 // DERIVED VALUES
 //====================
+
+if (nose_profile_sections < 2) {
+    echo("nose_profile_sections must be at least 2; enforcing a minimum of 2.");
+}
 
 // At least 2 sections are required to create one hull segment from i to i + 1.
 validated_nose_sections = max(nose_profile_sections, 2);
