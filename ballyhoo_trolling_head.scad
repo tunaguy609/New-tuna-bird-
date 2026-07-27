@@ -27,7 +27,7 @@ taper_radius_reduction = 2.0;
 cutout_overlap = 1.0;
 water_port = 3.5;
 nose_section_count = 14;
-// Height of each cylindrical slice used to hull the nose profile.
+// Axial length of each cylindrical slice used to hull the nose profile.
 hull_slice_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper (typical range 0.3-2.0).
 nose_curve_exponent = 0.65;
@@ -70,26 +70,14 @@ module nose_section(section_index) {
 }
 
 module rounded_nose() {
-    difference() {
-        union() {
-            // Blend multiple cross-sections to form
-            // a smooth trolling head profile.
-            // Loop through adjacent section pairs (i with i + 1) to build the profile.
-            for (i = [0:safe_nose_sections - 2]) {
-                hull() {
-                    nose_section(i);
-                    nose_section(i + 1);
-                }
-            }
+    // Blend multiple cross-sections to form
+    // a smooth trolling head profile.
+    // Loop through adjacent section pairs (i with i + 1) to build the profile.
+    for (i = [0:safe_nose_sections - 2]) {
+        hull() {
+            nose_section(i);
+            nose_section(i + 1);
         }
-
-        // Center line passage
-        translate([-bore_extension, 0, 0])
-            rotate([0, 90, 0])
-                cylinder(
-                    h = nose_length + (bore_extension * 2),
-                    r = line_hole / 2
-                );
     }
 }
 
