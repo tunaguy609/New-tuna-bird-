@@ -38,13 +38,13 @@ bore_extension = 1;
 eye_diameter = 6.5;
 eye_depth = 1.5;
 
-eye_x = 27.0;
-eye_y = 7.6;
+eye_position_x = 27.0;
+eye_position_y = 7.6;
 
 water_port_diameter = 3.5;
 water_port_angle = 28;
-water_port_x = 33.5;
-water_port_y = 6.0;
+water_port_position_x = 33.5;
+water_port_position_y = 6.0;
 water_port_height = 25;
 
 //====================
@@ -154,21 +154,14 @@ module rear_body() {
 /////////////////////////////////////////////////////
 
 module eye_recesses() {
-    // Right eye
-    translate([eye_x, -eye_y, 0])
-        rotate([0, 90, 0])
-            cylinder(
-                h = eye_depth,
-                r = eye_diameter / 2
-            );
-
-    // Left eye
-    translate([eye_x, eye_y, 0])
-        rotate([0, 90, 0])
-            cylinder(
-                h = eye_depth,
-                r = eye_diameter / 2
-            );
+    for (side = [-1, 1]) {
+        translate([eye_position_x, side * eye_position_y, 0])
+            rotate([0, 90, 0])
+                cylinder(
+                    h = eye_depth,
+                    r = eye_diameter / 2
+                );
+    }
 }
 
 /////////////////////////////////////////////////////
@@ -176,23 +169,15 @@ module eye_recesses() {
 /////////////////////////////////////////////////////
 
 module water_ports() {
-    // Right side
-    translate([water_port_x, -water_port_y, 0])
-        rotate([0, water_port_angle, 90])
-            cylinder(
-                h = water_port_height,
-                r = water_port_diameter / 2,
-                center = true
-            );
-
-    // Left side
-    translate([water_port_x, water_port_y, 0])
-        rotate([0, -water_port_angle, 90])
-            cylinder(
-                h = water_port_height,
-                r = water_port_diameter / 2,
-                center = true
-            );
+    for (side = [-1, 1]) {
+        translate([water_port_position_x, side * water_port_position_y, 0])
+            rotate([0, -side * water_port_angle, 90])
+                cylinder(
+                    h = water_port_height,
+                    r = water_port_diameter / 2,
+                    center = true
+                );
+    }
 }
 
 module head_body() {
