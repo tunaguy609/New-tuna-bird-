@@ -53,10 +53,6 @@ water_port_height = 25;
 // DERIVED VALUES
 //====================
 
-if (nose_profile_sections < 2) {
-    echo("nose_profile_sections must be at least 2; using 2 for the generated model.");
-}
-
 // At least 2 sections are required to create one hull segment from i to i + 1.
 validated_nose_sections = max(nose_profile_sections, 2);
 // Computed from the nose and rear body lengths.
@@ -155,8 +151,8 @@ module rear_body() {
 /////////////////////////////////////////////////////
 
 module eye_recesses() {
-    for (mirror_sign = [-1, 1]) {
-        translate([eye_position_x, mirror_sign * eye_position_y, 0])
+    for (side_multiplier = [-1, 1]) {
+        translate([eye_position_x, side_multiplier * eye_position_y, 0])
             rotate([0, 90, 0])
                 cylinder(
                     h = eye_depth,
@@ -170,9 +166,9 @@ module eye_recesses() {
 /////////////////////////////////////////////////////
 
 module water_ports() {
-    for (mirror_sign = [-1, 1]) {
-        translate([water_port_position_x, mirror_sign * water_port_position_y, 0])
-            rotate([0, -mirror_sign * water_port_angle, 90])
+    for (side_multiplier = [-1, 1]) {
+        translate([water_port_position_x, side_multiplier * water_port_position_y, 0])
+            rotate([0, -side_multiplier * water_port_angle, 90])
                 cylinder(
                     h = water_port_height,
                     r = water_port_diameter / 2,
