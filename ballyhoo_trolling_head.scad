@@ -9,8 +9,6 @@ rear_length = 22.2;
 max_diameter = 19.05;
 tip_diameter = 4.8;
 line_hole = 2.0;
-eye_diameter = 6.5;
-eye_depth = 1.5;
 
 //====================
 // SKIRT POCKET
@@ -25,7 +23,6 @@ ring_width = 3.0;
 ring_height = 1.2;
 taper_radius_reduction = 2.0;
 cutout_overlap = 1.0;
-water_port = 3.5;
 nose_profile_sections = 14;
 // Axial length of each cylindrical slice used to hull the nose profile.
 nose_hull_slice_height = 0.6;
@@ -33,6 +30,20 @@ nose_hull_slice_height = 0.6;
 nose_curve_exponent = 0.65;
 // Extra length to extend the center bore beyond the model ends (mm).
 bore_extension = 1;
+
+/////////////////////////////////////////////////////
+// PART 4 PARAMETERS
+/////////////////////////////////////////////////////
+
+eye_diameter = 6.5;
+eye_depth = 1.5;
+
+eye_x = 27.0;
+eye_y = 7.6;
+
+water_port_diameter = 3.5;
+water_port_angle = 28;
+water_port_x = 33.5;
 
 //====================
 // DERIVED VALUES
@@ -136,17 +147,73 @@ module rear_body() {
     }
 }
 
-difference() {
-    union() {
-        rounded_nose();
-        rear_body();
-    }
+/////////////////////////////////////////////////////
+// Eye Recesses
+/////////////////////////////////////////////////////
 
-    // Center bore
-    translate([-bore_extension, 0, 0])
+module eye_recesses() {
+    // Right eye
+    translate([eye_x, -eye_y, 0])
         rotate([0, 90, 0])
             cylinder(
-                h = overall_length + (bore_extension * 2),
-                r = line_hole / 2
+                h = eye_depth,
+                r = eye_diameter / 2
+            );
+
+    // Left eye
+    translate([eye_x, eye_y, 0])
+        rotate([0, -90, 0])
+            cylinder(
+                h = eye_depth,
+                r = eye_diameter / 2
             );
 }
+
+/////////////////////////////////////////////////////
+// Water Ports
+/////////////////////////////////////////////////////
+
+module water_ports() {
+    // Right side
+    translate([water_port_x, -6.0, 0])
+        rotate([0, water_port_angle, 90])
+            cylinder(
+                h = 25,
+                r = water_port_diameter / 2,
+                center = true
+            );
+
+    // Left side
+    translate([water_port_x, 6.0, 0])
+        rotate([0, -water_port_angle, 90])
+            cylinder(
+                h = 25,
+                r = water_port_diameter / 2,
+                center = true
+            );
+}
+
+module head_body() {
+    difference() {
+        union() {
+            rounded_nose();
+            rear_body();
+        }
+
+        // Center bore
+        translate([-bore_extension, 0, 0])
+            rotate([0, 90, 0])
+                cylinder(
+                    h = overall_length + (bore_extension * 2),
+                    r = line_hole / 2
+                );
+
+        // Eye recesses
+        eye_recesses();
+
+        // Water ports
+        water_ports();
+    }
+}
+
+head_body();
