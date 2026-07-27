@@ -44,6 +44,8 @@ eye_y = 7.6;
 water_port_diameter = 3.5;
 water_port_angle = 28;
 water_port_x = 33.5;
+water_port_y = 6.0;
+water_port_height = 25;
 
 //====================
 // DERIVED VALUES
@@ -162,7 +164,7 @@ module eye_recesses() {
 
     // Left eye
     translate([eye_x, eye_y, 0])
-        rotate([0, -90, 0])
+        rotate([0, 90, 0])
             cylinder(
                 h = eye_depth,
                 r = eye_diameter / 2
@@ -175,19 +177,19 @@ module eye_recesses() {
 
 module water_ports() {
     // Right side
-    translate([water_port_x, -6.0, 0])
+    translate([water_port_x, -water_port_y, 0])
         rotate([0, water_port_angle, 90])
             cylinder(
-                h = 25,
+                h = water_port_height,
                 r = water_port_diameter / 2,
                 center = true
             );
 
     // Left side
-    translate([water_port_x, 6.0, 0])
+    translate([water_port_x, water_port_y, 0])
         rotate([0, -water_port_angle, 90])
             cylinder(
-                h = 25,
+                h = water_port_height,
                 r = water_port_diameter / 2,
                 center = true
             );
