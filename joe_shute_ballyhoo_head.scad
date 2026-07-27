@@ -65,8 +65,6 @@ $fn = 72;   // facet count – increase for smoother curves
 
 // Body: a tapered cylinder (frustum) blending nose tip → body dia
 module body() {
-    cylinder_length = head_length - collar_length;
-
     hull() {
         // Rear (wide) end of the tapered body
         translate([0, 0, collar_length])
