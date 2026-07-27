@@ -58,10 +58,6 @@ validated_nose_sections = max(nose_profile_sections, 2);
 overall_length = nose_length + rear_length;
 section_spacing = nose_length / (validated_nose_sections - 1);
 
-if (nose_profile_sections < 2) {
-    echo("nose_profile_sections must be at least 2; enforcing a minimum of 2.");
-}
-
 function section_x_offset(section_index) = section_index * section_spacing;
 
 // Returns the nose radius at a section index along the rounded profile.
@@ -84,8 +80,7 @@ module nose_section(section_index) {
 }
 
 module rounded_nose() {
-    // Blend multiple cross-sections to form
-    // a smooth trolling head profile.
+    // Blend multiple cross-sections to form a smooth trolling head profile.
     // Loop through adjacent section pairs (i with i + 1) to build the profile.
     for (i = [0:validated_nose_sections - 2]) {
         hull() {
