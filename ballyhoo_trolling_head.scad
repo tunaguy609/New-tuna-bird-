@@ -4,9 +4,10 @@ $fn = 140;
 // USER PARAMETERS
 //====================
 
-overall_length = 59.7;
 nose_length = 37.5;
 rear_length = 22.2;
+overall_length = nose_length + rear_length;
+
 max_diameter = 19.05;
 tip_diameter = 4.8;
 line_hole = 2.0;
@@ -18,7 +19,7 @@ retaining_ring_width = 3.0;
 ring_height = 1.2;
 water_port = 3.5;
 nose_sections = 14;
-section_thickness = 0.6;
+section_height = 0.6;
 nose_curve_exponent = 0.65;
 
 module rounded_nose() {
@@ -35,7 +36,7 @@ module rounded_nose() {
                     ])
                         rotate([0, 90, 0])
                             cylinder(
-                                h = section_thickness,
+                                h = section_height,
                                 r =
                                     (tip_diameter / 2) +
                                     ((max_diameter - tip_diameter) / 2) *
@@ -49,7 +50,7 @@ module rounded_nose() {
                     ])
                         rotate([0, 90, 0])
                             cylinder(
-                                h = section_thickness,
+                                h = section_height,
                                 r =
                                     (tip_diameter / 2) +
                                     ((max_diameter - tip_diameter) / 2) *
