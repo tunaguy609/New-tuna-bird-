@@ -6,9 +6,6 @@ $fn = 140;
 
 nose_length = 37.5;
 rear_length = 22.2;
-// Derived from the combined nose and rear body lengths.
-overall_length = nose_length + rear_length;
-
 max_diameter = 19.05;
 tip_diameter = 4.8;
 line_hole = 2.0;
@@ -24,8 +21,16 @@ nose_sections = 14;
 section_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper.
 nose_curve_exponent = 0.65;
+
+//====================
+// DERIVED VALUES
+//====================
+
+// Computed from the nose and rear body lengths.
+overall_length = nose_length + rear_length;
 section_spacing = nose_length / (nose_sections - 1);
 
+// Returns the nose radius at a section index along the rounded profile.
 function nose_radius(section_index) =
     (tip_diameter / 2) +
     ((max_diameter - tip_diameter) / 2) *
