@@ -26,9 +26,9 @@ ring_height = 1.2;
 taper_radius_reduction = 2.0;
 cutout_overlap = 1.0;
 water_port = 3.5;
-nose_section_count = 14;
+nose_profile_sections = 14;
 // Axial length of each cylindrical slice used to hull the nose profile.
-hull_slice_height = 0.6;
+nose_hull_slice_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper (typical range 0.3-2.0).
 nose_curve_exponent = 0.65;
 // Extra length to extend the center bore beyond the model ends (mm).
@@ -39,13 +39,13 @@ bore_extension = 1;
 //====================
 
 // At least 2 sections are required to create one hull segment from i to i + 1.
-safe_nose_sections = max(nose_section_count, 2);
+validated_nose_sections = max(nose_profile_sections, 2);
 // Computed from the nose and rear body lengths.
 overall_length = nose_length + rear_length;
-section_spacing = nose_length / (safe_nose_sections - 1);
+section_spacing = nose_length / (validated_nose_sections - 1);
 
-if (nose_section_count < 2) {
-    echo("nose_section_count must be at least 2; using safe_nose_sections = 2.");
+if (nose_profile_sections < 2) {
+    echo("nose_profile_sections must be at least 2; enforcing a minimum of 2.");
 }
 
 function section_x_offset(section_index) = section_index * section_spacing;
@@ -54,7 +54,7 @@ function section_x_offset(section_index) = section_index * section_spacing;
 function nose_radius(section_index) =
     (tip_diameter / 2) +
     ((max_diameter - tip_diameter) / 2) *
-    pow(section_index / (safe_nose_sections - 1), nose_curve_exponent);
+    pow(section_index / (validated_nose_sections - 1), nose_curve_exponent);
 
 module nose_section(section_index) {
     translate([
@@ -64,7 +64,7 @@ module nose_section(section_index) {
     ])
         rotate([0, 90, 0])
             cylinder(
-                h = hull_slice_height,
+                h = nose_hull_slice_height,
                 r = nose_radius(section_index)
             );
 }
@@ -73,7 +73,7 @@ module rounded_nose() {
     // Blend multiple cross-sections to form
     // a smooth trolling head profile.
     // Loop through adjacent section pairs (i with i + 1) to build the profile.
-    for (i = [0:safe_nose_sections - 2]) {
+    for (i = [0:validated_nose_sections - 2]) {
         hull() {
             nose_section(i);
             nose_section(i + 1);
