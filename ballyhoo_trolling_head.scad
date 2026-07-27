@@ -21,6 +21,7 @@ nose_sections = 14;
 section_height = 0.6;
 // Lower values soften the curve; higher values steepen the taper.
 nose_curve_exponent = 0.65;
+// Extra length to extend the center bore beyond the model ends (mm).
 bore_extension = 1;
 
 //====================
@@ -39,35 +40,29 @@ function nose_radius(section_index) =
     ((max_diameter - tip_diameter) / 2) *
     pow(section_index / (nose_sections - 1), nose_curve_exponent);
 
+module nose_section(section_index) {
+    translate([
+        section_x_offset(section_index),
+        0,
+        0
+    ])
+        rotate([0, 90, 0])
+            cylinder(
+                h = section_height,
+                r = nose_radius(section_index)
+            );
+}
+
 module rounded_nose() {
     difference() {
         union() {
             // Blend multiple cross-sections to form
             // a smooth trolling-head profile.
-            // The loop runs from 0 to nose_sections - 2 inclusive so each hull pairs section i with i + 1.
+            // Loop pairs adjacent sections (i with i + 1) to build the profile.
             for (i = [0:nose_sections - 2]) {
                 hull() {
-                    translate([
-                        section_x_offset(i),
-                        0,
-                        0
-                    ])
-                        rotate([0, 90, 0])
-                            cylinder(
-                                h = section_height,
-                                r = nose_radius(i)
-                            );
-
-                    translate([
-                        section_x_offset(i + 1),
-                        0,
-                        0
-                    ])
-                        rotate([0, 90, 0])
-                            cylinder(
-                                h = section_height,
-                                r = nose_radius(i + 1)
-                            );
+                    nose_section(i);
+                    nose_section(i + 1);
                 }
             }
         }
