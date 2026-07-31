@@ -292,12 +292,12 @@ module groove(zPos)
 module eye_pad(side=1)
 {
     translate([
-        side*(bodyDiameter/2-eyeFlatDepth/2),
+        side*(bodyDiameter/2),
         0,
         eyeLocation
     ])
 
-    rotate([0,90,0])
+    rotate([0,-side*90,0])
 
     cylinder(
         d=eyeFlatDiameter,
@@ -317,7 +317,7 @@ module eye_pocket(side=1)
         eyeLocation
     ])
 
-    rotate([0,90,0])
+    rotate([0,-side*90,0])
 
     cylinder(
         d=eyeDiameter,

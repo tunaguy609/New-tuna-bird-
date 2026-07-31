@@ -153,7 +153,7 @@ module rear_body() {
 module eye_recesses() {
     for (side_multiplier = [-1, 1]) {
         translate([eye_position_x, side_multiplier * eye_position_y, 0])
-            rotate([0, 90, 0])
+            rotate([side_multiplier * 90, 0, 0])
                 cylinder(
                     h = eye_depth,
                     r = eye_diameter / 2
