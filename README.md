@@ -8,6 +8,7 @@ A collection of parametric OpenSCAD designs for offshore trolling lures.
 |------|-------------|
 | `ballyhoo_trolling_head.scad` | Compact ballyhoo-style trolling head (37.5 mm nose + 22.2 mm rear, 19.05 mm max OD) |
 | `trolling_head.scad` | Production offshore trolling head — Version 5 Tuna Lure (65 mm, 24 mm OD, ogive profile) |
+| `version_2.scad` | Updated production offshore trolling head — Version 5.0 with eye pad/pocket orientation fixes |
 
 ## Requirements
 
